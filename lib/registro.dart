@@ -1,12 +1,17 @@
+import 'package:app_celtic_drive/inicio_sesion.dart';
 import 'package:flutter/material.dart';
 
-class inicio_sesion extends StatefulWidget{
-  static const nombreRuta ='login';
+class registro extends StatefulWidget{
+  static const nombreRuta ='registro';
+
   @override
-  State<inicio_sesion> createState() => _inicio_sesionState();
+  State<registro> createState()=> _registroState();
 }
 
-class _inicio_sesionState extends State<inicio_sesion> {
+class _registroState extends State<registro> {
+  @override
+  
+    
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   //final AuthService authService = AuthService();
@@ -27,11 +32,31 @@ class _inicio_sesionState extends State<inicio_sesion> {
           children: [
             const Center(
               child: Text(
-                "Login",
+                "Registro",
                 style: TextStyle(
                   fontSize: 34,
                   fontFamily: "Poppins",
                   fontWeight: FontWeight.bold
+                ),
+              ),
+            ),
+            SizedBox(child: Container(height: 15,),),
+            const Text("Nombre usuario",style: TextStyle(color: Colors.black),),
+            Padding(
+              padding: const EdgeInsets.only(top: 8,bottom: 8),
+              child: TextField(
+                controller: emailController,
+                obscureText: false,
+                decoration: InputDecoration(
+                  enabledBorder:const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                  focusedBorder:const OutlineInputBorder(
+                    borderSide: BorderSide(color: Color.fromARGB(255, 0, 118, 253)),
+                  ),
+                  fillColor: Colors.grey.shade200,
+                  filled: true,
+                  hintStyle: TextStyle(color: Colors.grey[500])
                 ),
               ),
             ),
@@ -77,7 +102,8 @@ class _inicio_sesionState extends State<inicio_sesion> {
               padding: const EdgeInsets.only(top: 8, bottom: 24),
               child: ElevatedButton.icon(
                 onPressed: () {
-                  //loginUser();
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>  inicio_sesion()));
                   
                 },
                 style: ElevatedButton.styleFrom(
@@ -93,7 +119,7 @@ class _inicio_sesionState extends State<inicio_sesion> {
                   )
                 ),
                 icon: const Icon(Icons.arrow_right, color: Color.fromARGB(255, 255, 255, 255),),
-                label: const Text("Login",style: TextStyle(color: Colors.white),),
+                label: const Text("Registrarse",style: TextStyle(color: Colors.white),),
               ),
             )
           ]
@@ -102,3 +128,4 @@ class _inicio_sesionState extends State<inicio_sesion> {
     ));
   }
 }
+

@@ -13,8 +13,8 @@ class subir_documento extends StatefulWidget{
 }
 
 class _subir_documentoState extends State<subir_documento> {
-  String tipo = 'All';
-  var fileTypeList = ['All', 'Image', 'Video', 'Audio'];
+  String tipo = 'Todo';
+  var fileTypeList = ['Todo', 'Imagen', 'Video', 'Audio'];
   FilePickerResult? resultado;
   PlatformFile? archivo;
   @override
@@ -75,7 +75,7 @@ class _subir_documentoState extends State<subir_documento> {
 
   void seleccionar(String? tipo)async{
     switch (tipo) {
-      case 'Image':
+      case 'Imagen':
         resultado = await FilePicker.platform.pickFiles(type: FileType.image);
         if (resultado == null) return;
         archivo = resultado!.files.first;
@@ -93,7 +93,7 @@ class _subir_documentoState extends State<subir_documento> {
         archivo = resultado!.files.first;
         setState(() {});
         break;
-      case 'All':
+      case 'Todo':
         resultado = await FilePicker.platform.pickFiles();
         if (resultado == null) return;
         archivo = resultado!.files.first;
