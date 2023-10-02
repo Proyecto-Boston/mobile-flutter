@@ -1,6 +1,24 @@
+import 'package:app_celtic_drive/subir_documento.dart';
+import 'package:app_celtic_drive/subir_documento.dart';
 import 'package:flutter/material.dart';
+class iniciar extends StatelessWidget {
+  const iniciar({super.key});
+
+   static const appTitle = 'Inicio';
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: appTitle,
+      home: Inicio(title: appTitle,),
+    );
+  }
+}
 
 class Inicio extends StatefulWidget{
+  const Inicio({super.key, required this.title});
+
+  final String title;
   @override
   State<Inicio> createState()=> _inicioState();
 }
@@ -9,7 +27,8 @@ class _inicioState extends State<Inicio>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 0, 118, 253),
+      appBar: AppBar(title: Text(widget.title,style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),backgroundColor:Color.fromARGB(255, 0, 118, 253), ),
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       drawer: Drawer(
         width: 350,
         child: Container(
@@ -30,20 +49,20 @@ class _inicioState extends State<Inicio>{
                         const SizedBox(
                           height: 100,
                         ),
-                        ListTile(
+                        const ListTile(
                           title: Text("Usuario",
                           style: const TextStyle(color: Colors.white,fontSize: 25,fontWeight: FontWeight.w800)),
-                          subtitle: Text("usuario@gmail.com", style: TextStyle(fontSize: 15,color: Color.fromARGB(255, 0, 118, 253)),),
+                          subtitle: Text("usuario@gmail.com", style: TextStyle(fontSize: 15,color: Color.fromARGB(255, 255, 255, 255)),),
                           leading: const CircleAvatar(
                             child: Icon(
                               Icons.perm_identity,
-                              color: Colors.white,
+                              color: Color.fromARGB(255, 255, 255, 255),
                             ),
                             radius: 40,
                           ),
                         ),
                         Divider(
-                          height: 64,
+                          height: 40,
                           thickness: 0.5,
                           color: Colors.white.withOpacity(0.6),
                           indent: 32,
@@ -55,8 +74,8 @@ class _inicioState extends State<Inicio>{
                             child: Row(
                               children: const [
                                 Icon(
-                                  color: Color.fromARGB(255, 0, 118, 253),
-                                  Icons.home,
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                  Icons.upload_file_rounded,
                                   size: 30,
                                 ),
                                 SizedBox(
@@ -71,7 +90,7 @@ class _inicioState extends State<Inicio>{
                           ),
                           onTap: (){
                             Navigator.of(context).pop();
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Inicio()));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context)=> const subir_documento(title: "Subir Documento",)));
                           },
                         ),
                         Padding(
@@ -79,8 +98,8 @@ class _inicioState extends State<Inicio>{
                           child: Row(
                             children: const [
                               Icon(
-                                color: Color.fromARGB(255, 32, 151, 219),
-                                Icons.person,
+                                color: Color.fromARGB(255, 255, 255, 255),
+                                Icons.file_download_rounded,
                                 size: 30,
                               ),
                               SizedBox(
@@ -99,8 +118,8 @@ class _inicioState extends State<Inicio>{
                             child: Row(
                               children: const [
                                 Icon(
-                                  color: Color.fromARGB(255, 32, 151, 219),
-                                  Icons.code,
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                  Icons.edit_document,
                                   size: 30,
                                 ),
                                 SizedBox(
@@ -115,7 +134,7 @@ class _inicioState extends State<Inicio>{
                           ),
                           onTap: (){
                             Navigator.of(context).pop();
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Inicio()));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Inicio(title: "Inicio",)));
                           },
                         ),
                         GestureDetector(
@@ -124,8 +143,8 @@ class _inicioState extends State<Inicio>{
                             child: Row(
                               children: const [
                                 Icon(
-                                  color: Color.fromARGB(255, 32, 151, 219),
-                                  Icons.data_array,
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                  Icons.folder_delete_rounded,
                                   size: 30,
                                 ),
                                 SizedBox(
@@ -140,15 +159,8 @@ class _inicioState extends State<Inicio>{
                           ),
                           onTap: (){
                             Navigator.of(context).pop();
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Inicio()));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Inicio(title: "Inicio",)));
                           },
-                        ),
-                        Divider(
-                          height: 64,
-                          thickness: 0.5,
-                          color: Colors.white.withOpacity(0.6),
-                          indent: 32,
-                          endIndent: 32,
                         ),
                         GestureDetector(
                           child: Padding(
@@ -156,8 +168,8 @@ class _inicioState extends State<Inicio>{
                             child: Row(
                               children: const [
                                 Icon(
-                                  color: Color.fromARGB(255, 32, 151, 219),
-                                  Icons.settings,
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                  Icons.folder_shared_rounded,
                                   size: 30,
                                 ),
                                 SizedBox(
@@ -172,7 +184,7 @@ class _inicioState extends State<Inicio>{
                           ),
                           onTap: (){
                             Navigator.of(context).pop();
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Inicio()));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Inicio(title: "Inicio",)));
                           },
                         ),
                         GestureDetector(
@@ -181,8 +193,8 @@ class _inicioState extends State<Inicio>{
                             child: Row(
                               children: const [
                                 Icon(
-                                  color: Color.fromARGB(255, 32, 151, 219),
-                                  Icons.logout,
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                  Icons.folder,
                                   size: 30,
                                 ),
                                 SizedBox(
@@ -190,6 +202,68 @@ class _inicioState extends State<Inicio>{
                                 ),
                                 Text(
                                   "Crear Carpeta",
+                                  style: TextStyle(fontWeight: FontWeight.w300,fontSize: 20,color:Colors.white),
+                                )
+                              ],
+                            ),
+                          ),
+                          onTap: (){
+                            //signOutUser();
+                          },
+                        ),
+                        Divider(
+                          height: 30,
+                          thickness: 0.5,
+                          color: Colors.white.withOpacity(0.6),
+                          indent: 32,
+                          endIndent: 32,
+                        ),
+                        GestureDetector(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left:30, top:16, bottom:16),
+                            child: Row(
+                              children: const [
+                                Icon(
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                  Icons.storage_rounded,
+                                  size: 30,
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Text(
+                                  "Almacenamiento",
+                                  style: TextStyle(fontWeight: FontWeight.w300,fontSize: 20,color:Colors.white),
+                                )
+                              ],
+                            ),
+                          ),
+                          onTap: (){
+                            //signOutUser();
+                          },
+                        ),
+                        Divider(
+                          height: 30,
+                          thickness: 0.5,
+                          color: Colors.white.withOpacity(0.6),
+                          indent: 32,
+                          endIndent: 32,
+                        ),
+                        GestureDetector(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left:30, top:16, bottom:16),
+                            child: Row(
+                              children: const [
+                                Icon(
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                  Icons.logout_rounded,
+                                  size: 30,
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Text(
+                                  "Salir",
                                   style: TextStyle(fontWeight: FontWeight.w300,fontSize: 20,color:Colors.white),
                                 )
                               ],
@@ -208,6 +282,7 @@ class _inicioState extends State<Inicio>{
           ),
         ),
       ),
+      
     );
   }
 }
