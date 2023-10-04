@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: inicio_sesion(),
+      home: iniciar(),
       routes: {
         registro.nombreRuta: (BuildContext context)=> registro(),
         inicio_sesion.nombreRuta:(BuildContext context) => inicio_sesion(),

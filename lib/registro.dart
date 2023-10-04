@@ -11,7 +11,7 @@ class registro extends StatefulWidget{
 class _registroState extends State<registro> {
   @override
   
-    
+  final TextEditingController nameController = TextEditingController(); 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   //final AuthService authService = AuthService();
@@ -45,7 +45,7 @@ class _registroState extends State<registro> {
             Padding(
               padding: const EdgeInsets.only(top: 8,bottom: 8),
               child: TextField(
-                controller: emailController,
+                controller: nameController,
                 obscureText: false,
                 decoration: InputDecoration(
                   enabledBorder:const OutlineInputBorder(
