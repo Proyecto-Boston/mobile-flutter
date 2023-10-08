@@ -1,6 +1,5 @@
 import 'package:app_celtic_drive/inicio.dart';
 import 'package:app_celtic_drive/inicio_sesion.dart';
-import 'package:app_celtic_drive/prueba.dart';
 import 'package:app_celtic_drive/registro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,7 +21,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: prueba(),
+      home: inicio_sesion(),
       routes: {
         registro.nombreRuta: (BuildContext context)=> registro(),
         inicio_sesion.nombreRuta:(BuildContext context) => inicio_sesion(),

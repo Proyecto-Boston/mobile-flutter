@@ -1,3 +1,5 @@
+import 'package:app_celtic_drive/auth_service.dart';
+import 'package:app_celtic_drive/user.dart';
 import 'package:flutter/material.dart';
 
 class inicio_sesion extends StatefulWidget{
@@ -9,11 +11,8 @@ class inicio_sesion extends StatefulWidget{
 class _inicio_sesionState extends State<inicio_sesion> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  //final AuthService authService = AuthService();
-  /*
-  void loginUser(){
-    authService.signInUser(context: context, email: emailController.text, password: passwordController.text);
-  }*/
+  String message="";
+  final AuthService auth_service=AuthService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(body:
@@ -76,8 +75,25 @@ class _inicio_sesionState extends State<inicio_sesion> {
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 24),
               child: ElevatedButton.icon(
-                onPressed: () {
-                  //loginUser();
+                onPressed: () async{
+                  final email = emailController.text;
+                  final password = passwordController.text;
+                  final user = User(email: email,password: password);
+
+                  final response = await auth_service.login(user);
+                  if (response.statusCode == 202) {
+                    setState(() {
+                      message = 'Ingreso exitoso';
+                    });
+                  } else if (response.statusCode == 400) {
+                    setState(() {
+                      message = 'Error: ${response.details}';
+                    });
+                  } else {
+                    setState(() {
+                      message = 'Error desconocido';
+                    });
+                  }
                   
                 },
                 style: ElevatedButton.styleFrom(
@@ -95,7 +111,12 @@ class _inicio_sesionState extends State<inicio_sesion> {
                 icon: const Icon(Icons.arrow_right, color: Color.fromARGB(255, 255, 255, 255),),
                 label: const Text("Login",style: TextStyle(color: Colors.white),),
               ),
-            )
+            ),
+            SizedBox(height: 12.0),
+            Text(
+              message,
+              style: TextStyle(color: Colors.red),
+            ),
           ]
         )
       )
