@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:app_celtic_drive/File.dart';
+import 'package:app_celtic_drive/auth_service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
@@ -13,10 +15,11 @@ class subir_documento extends StatefulWidget{
 }
 
 class _subir_documentoState extends State<subir_documento> {
+  late AuthService authService;
   String tipo = 'Todo';
   var fileTypeList = ['Todo', 'Imagen', 'Video', 'Audio'];
   FilePickerResult? resultado;
-  PlatformFile? archivo;
+  late File archivo;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,15 +42,15 @@ class _subir_documentoState extends State<subir_documento> {
                 onChanged: (String? value){
                   setState(() {
                     tipo=value!;
-                    archivo=null;
+                    archivo;
                   });
 
                 },
             )],
             ),
-            ElevatedButton(onPressed:() async{seleccionar(tipo);} , child: Text("Seleccionar Documento")),
-            if (archivo!=null) detallesArchivo(archivo!),
-            if (archivo!=null) ElevatedButton(onPressed: (){verSeleccion(archivo!);}, child: Text("Ver archivo"))
+            ElevatedButton(onPressed:() {authService.subirArchivo(archivo as File);} , child: Text("Seleccionar Documento")),
+            if (archivo!=null) detallesArchivo(archivo! as PlatformFile),
+            if (archivo!=null) ElevatedButton(onPressed: (){verSeleccion(archivo! as PlatformFile);}, child: Text("Ver archivo"))
           ],
         )
       ),
@@ -71,36 +74,6 @@ class _subir_documentoState extends State<subir_documento> {
         ],
       ),
     );
-  }
-
-  void seleccionar(String? tipo)async{
-    switch (tipo) {
-      case 'Imagen':
-        resultado = await FilePicker.platform.pickFiles(type: FileType.image);
-        if (resultado == null) return;
-        archivo = resultado!.files.first;
-        setState(() {});
-        break;
-      case 'Video':
-        resultado = await FilePicker.platform.pickFiles(type: FileType.video);
-        if (resultado == null) return;
-        archivo = resultado!.files.first;
-        setState(() {});
-        break;
-      case 'Audio':
-        resultado = await FilePicker.platform.pickFiles(type: FileType.audio);
-        if (resultado == null) return;
-        archivo = resultado!.files.first;
-        setState(() {});
-        break;
-      case 'Todo':
-        resultado = await FilePicker.platform.pickFiles();
-        if (resultado == null) return;
-        archivo = resultado!.files.first;
-        setState(() {});
-        break;
-    }
-    //verSeleccion(archivo!);
   }
 
   void verSeleccion(PlatformFile archivo){

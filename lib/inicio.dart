@@ -1,32 +1,37 @@
+import 'dart:convert';
 import 'dart:io';
 //Hola
 import 'package:app_celtic_drive/permisos.dart';
 import 'package:app_celtic_drive/ruta_directorio.dart';
 import 'package:app_celtic_drive/subir_documento.dart';
 import 'package:app_celtic_drive/subir_documento.dart';
+import 'package:app_celtic_drive/user.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path/path.dart' as Path;
+import 'package:http/http.dart' as http;
 
 class iniciar extends StatelessWidget {
-  const iniciar({super.key});
+  iniciar({super.key});
 
    static const appTitle = 'Inicio';
+   User usuarioEjem=User(id:0,email: "email", password: "password");
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return  const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: appTitle,
-      home: Inicio(title: appTitle,),
+      home: Inicio(title: appTitle),
     );
   }
 }
 
 class Inicio extends StatefulWidget{
-  const Inicio({super.key, required this.title});
+  const Inicio({super.key, required this.title, this.user});
 
   final String title;
+  final User? user;
   @override
   State<Inicio> createState()=> _inicioState();
 }
@@ -34,13 +39,32 @@ class Inicio extends StatefulWidget{
 class _inicioState extends State<Inicio>{
   bool isPermission = false;
   var checkAllPermissions = CPermisos();
-
+  List<String> documentos = [];
   checkPermission() async {
     var permission = await checkAllPermissions.isStoragePermission();
     if (permission) {
       setState(() {
         isPermission = true;
       });
+    }
+  }
+  Future<void> obtenerDocumentos() async {
+    final String url = 'http://10.153.50.34:8000/api/obtenerArchivos?idUser=${widget.user?.id}';
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        List<String> documentosObtenidos = List<String>.from(jsonResponse);
+        setState(() {
+          documentos = documentosObtenidos;
+        });
+      } else {
+        print('Error al obtener documentos: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error de conexión: $e');
     }
   }
 
@@ -134,10 +158,10 @@ class _inicioState extends State<Inicio>{
                         const SizedBox(
                           height: 100,
                         ),
-                        const ListTile(
+                        ListTile(
                           title: Text("Usuario",
                           style: const TextStyle(color: Colors.white,fontSize: 25,fontWeight: FontWeight.w800)),
-                          subtitle: Text("usuario@gmail.com", style: TextStyle(fontSize: 15,color: Color.fromARGB(255, 255, 255, 255)),),
+                          subtitle: Text(widget.user!.email, style: TextStyle(fontSize: 15,color: Color.fromARGB(255, 255, 255, 255)),),
                           leading: const CircleAvatar(
                             child: Icon(
                               Icons.perm_identity,
@@ -369,12 +393,13 @@ class _inicioState extends State<Inicio>{
       ),
       body: isPermission
             ? ListView.builder(
-                itemCount: dataList.length,
+                itemCount: documentos.length,
                 itemBuilder: (BuildContext context, int index) {
-                  var data = dataList[index];
+                  var data = documentos[index];
                   return Lista(
-                    fileUrl: data['url']!,
-                    title: data['title']!,
+                    name: data[index],
+                    path: data[index],
+                    size: data[index]
                   );
                 })
             : TextButton(
@@ -387,9 +412,10 @@ class _inicioState extends State<Inicio>{
 }
 
 class Lista extends StatefulWidget {
-  Lista({super.key, required this.fileUrl, required this.title});
-  final String fileUrl;
-  final String title;
+  Lista({super.key, required this.path, required this.name, required this.size});
+  final String name;
+  final String path;
+  final String size;
 
   @override
   State<Lista> createState() => _TileListState();
@@ -414,7 +440,7 @@ class _TileListState extends State<Lista> {
     });
 
     try {
-      await Dio().download(widget.fileUrl, filePath,
+      await Dio().download(widget.path, filePath,
           onReceiveProgress: (count, total) {
         setState(() {
           progress = (count / total);
@@ -457,7 +483,7 @@ class _TileListState extends State<Lista> {
   void initState() {
     super.initState();
     setState(() {
-      fileName = Path.basename(widget.fileUrl);
+      fileName = Path.basename(widget.path);
     });
     checkFileExit();
   }
@@ -468,7 +494,7 @@ class _TileListState extends State<Lista> {
       elevation: 10,
       shadowColor: Colors.grey.shade100,
       child: ListTile(
-          title: Text(widget.title),
+          title: Text(widget.name),
           leading: IconButton(
               onPressed: () {
                 fileExists && dowloading == false

@@ -1,47 +1,206 @@
-
 import 'dart:convert';
 
+import 'package:app_celtic_drive/File.dart';
+import 'package:app_celtic_drive/Folder.dart';
+import 'package:app_celtic_drive/custom_file.dart';
 import 'package:app_celtic_drive/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:app_celtic_drive/response.dart';
+import 'package:file_picker/file_picker.dart';
 
-class AuthService{
-
-  Future<Response> login(User user) async {
-    final url = 'https://192.168.0.114:7286/api/Soap/Login'; 
-    final body = {
-      'email': user.email,
-      'password': user.password,
-    };
-
-    final headers = {
-      'Content-Type': 'application/json',
-    };
+class AuthService {
+  Future<String> LoginUsuario(User user) async {
+    final String apiUrl = 'https://10.153.50.34:8000/api/login';
 
     try {
       final response = await http.post(
-        Uri.parse(url),
-        headers: headers,
-        body: jsonEncode(body),
+        Uri.parse(apiUrl),
+        body: json.encode({
+          "email": user.email,
+          "password": user.password,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
       );
 
-      if (response.statusCode == 202) {
-        
-        final responseData = jsonDecode(response.body);
-        final token = responseData['token'];
-        return Response(statusCode: 202, json: token, details: 'Ingreso exitoso');
+      if (response.statusCode == 201) {
+        final token = json.decode(response.body)["token_jwt"];
+        return "Ingreso exitoso. Token: $token";
       } else if (response.statusCode == 400) {
-        final responseData = jsonDecode(response.body);
-        final message = responseData['message'];
-        return Response(statusCode: 400, json: "null",details: message);
+        final mensajeError = json.decode(response.body)["message"];
+        return "Error de inicio de sesión: $mensajeError";
       } else {
-        return Response(statusCode: response.statusCode,json: "null", details: 'Error al procesar la solicitud');
+        return "Respuesta inesperada del servidor";
       }
     } catch (e) {
-      print('Error: $e');
-      return Response(statusCode: 400, json: "null",details: 'Error al procesar la solicitud');
+      print(e.toString());
+      return "Error de conexión";
     }
   }
 
+  Future<String> RegistroUsuario(User user) async {
+    final String apiUrl = 'http://10.153.50.34:8000/api/registro';
 
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        body: json.encode(user.toJson()),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 201) {
+        return 'Usuario registrado exitosamente';
+      } else if (response.statusCode == 400) {
+        return json.decode(response.body)['details'];
+      } else {
+        return 'Respuesta inesperada';
+      }
+    } catch (e) {
+      print('Error: $e');
+      return 'Error en la solicitud';
+    }
+  }
+
+  Future<String> verificarSesion(String token) async {
+    final String url = 'http://10.153.50.34:8000/api/verificarSesion';
+
+    final response = await http.post(
+      Uri.parse(url),
+      body: json.encode({"token": token}),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 201) {
+      return json.decode(response.body)["json"];
+    } else if (response.statusCode == 400) {
+      return json.decode(response.body)["details"];
+    } else {
+      return "Respuesta inesperada";
+    }
+  }
+
+  Future<String> crearCarpeta(Folder carpeta) async {
+    final String url = 'http://10.153.50.34:8000/api/crearCarpeta';
+
+    final response = await http.post(
+      Uri.parse(url),
+      body: json.encode(carpeta.toJson()),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 201) {
+      return "Carpeta creada";
+    } else if (response.statusCode == 400) {
+      return json.decode(response.body)["details"];
+    } else {
+      return "Respuesta inesperada";
+    }
+  }
+
+  Future<String> subirArchivo(File archivo) async {
+    final String url = 'http://10.153.50.34:8000/api/subirArchivo';
+
+      try {
+      var request = http.MultipartRequest('POST', Uri.parse(url))
+        ..files.add(await http.MultipartFile.fromPath(
+          'archivo',
+          archivo.path,
+        ));
+
+      var response = await request.send();
+      if (response.statusCode == 201) {
+        return "Archivo subido exitosamente";
+      } else if (response.statusCode == 400) {
+        final responseBody = await response.stream.bytesToString();
+        return responseBody;
+      } else {
+        return "Respuesta inesperada";
+      }
+    } catch (e) {
+      print(e.toString());
+      return "Error de conexión";
+    }
+  }
+
+  Future<String> moverArchivo(String ruta, int idArchivo) async {
+    final String url = 'https://localhost:7191/api/moverArchivo';
+
+    final Map<String, dynamic> requestBody = {
+      "ruta": ruta,
+      "idArchivo": idArchivo,
+    };
+
+    try {
+      final response = await http.put(
+        Uri.parse(url),
+        body: json.encode(requestBody),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 201) {
+        return "El archivo se ha movido correctamente";
+      } else if (response.statusCode == 400) {
+        return json.decode(response.body)["details"];
+      } else {
+        return "Respuesta inesperada";
+      }
+    } catch (e) {
+      print(e.toString());
+      return "Error de conexión";
+    }
+  }
+
+  Future<String> eliminarArchivo(File archivo) async {
+    final String url =
+        'https://localhost:7191/api/eliminarArchivos'; // Reemplaza con la URL real de tu backend
+
+    try {
+      final response = await http.put(
+        Uri.parse(url),
+        body: json.encode(archivo
+            .toJson()), // Asegúrate de que FileModel tenga un método toJson para convertirlo en un mapa
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 201) {
+        return "El archivo se ha eliminado correctamente";
+      } else if (response.statusCode == 400) {
+        return json.decode(response.body)["details"];
+      } else {
+        return "Respuesta inesperada";
+      }
+    } catch (e) {
+      print(e.toString());
+      return "Error de conexión";
+    }
+  }
+
+  Future<String> obtenerArchivosUsuario(int idUser) async {
+    final String url =
+        'https://localhost:7191/api/obtenerArchivos?idUser=$idUser'; // Reemplaza con la URL real de tu backend
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        return response.body;
+      } else if (response.statusCode == 400) {
+        return "Error: ${response.body}";
+      } else {
+        return "Respuesta inesperada";
+      }
+    } catch (e) {
+      print(e.toString());
+      return "Error de conexión";
+    }
+  }
 }
