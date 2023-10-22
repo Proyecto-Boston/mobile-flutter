@@ -151,32 +151,35 @@ class _registroState extends State<registro> {
                             final email = emailController.text;
                             final password = passwordController.text;
                             final user = User(
-                                id: 0,
                                 name: name,
-                                email: email,
                                 surname: surname,
+                                email: email,
                                 password: password);
 
-                            final response =
+                            try{
+                              final response =
                                 (await auth_service.RegistroUsuario(user));
-                            if (response == 201) {
-                              setState(() {
-                                message = 'Registro exitoso';
-                                Navigator.of(context).pop();
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Inicio(title: 'Inicio', user: user)),
-                                );
-                              });
-                            } else if (response == 400) {
-                              setState(() {
-                                message = 'Error: ${response}';
-                              });
-                            } else {
-                              setState(() {
-                                message = 'Error desconocido';
-                              });
+                              if (response == 201) {
+                                setState(() {
+                                  message = 'Registro exitoso';
+                                  Navigator.of(context).pop();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Inicio(title: 'Inicio', user: user)),
+                                  );
+                                });
+                              } else if (response == 400) {
+                                setState(() {
+                                  message = 'Error: ${response}';
+                                });
+                              } else {
+                                setState(() {
+                                  message = 'Error desconocido';
+                                });
+                              }
+                            }catch(e){
+                              print('Error: $e');
                             }
                           },
                           style: ElevatedButton.styleFrom(

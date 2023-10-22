@@ -87,7 +87,7 @@ class _inicio_sesionState extends State<inicio_sesion> {
                     final user = User(id: 0,email: email,password: password);
     
                     final response = (await auth_service.LoginUsuario(user));
-                    if (response == 201) {
+                    if (response == 202) {
                       setState(() {
                         message = 'Ingreso exitoso';
                         Navigator.of(context).pop();

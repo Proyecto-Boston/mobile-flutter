@@ -10,7 +10,7 @@ import 'package:file_picker/file_picker.dart';
 
 class AuthService {
   Future<String> LoginUsuario(User user) async {
-    final String apiUrl = 'https://10.153.50.34:8000/api/login';
+    final String apiUrl = 'http://10.153.50.58:8000/api/login';
 
     try {
       final response = await http.post(
@@ -39,8 +39,8 @@ class AuthService {
     }
   }
 
-  Future<String> RegistroUsuario(User user) async {
-    final String apiUrl = 'http://10.153.50.34:8000/api/registro';
+  Future<int> RegistroUsuario(User user) async {
+    final String apiUrl = 'https://10.0.2.2:8000/api/registro';
 
     try {
       final response = await http.post(
@@ -50,15 +50,15 @@ class AuthService {
       );
 
       if (response.statusCode == 201) {
-        return 'Usuario registrado exitosamente';
+        return 201;
       } else if (response.statusCode == 400) {
         return json.decode(response.body)['details'];
       } else {
-        return 'Respuesta inesperada';
+        return 400;
       }
     } catch (e) {
       print('Error: $e');
-      return 'Error en la solicitud';
+      return 503;
     }
   }
 
@@ -159,13 +159,12 @@ class AuthService {
 
   Future<String> eliminarArchivo(File archivo) async {
     final String url =
-        'https://localhost:7191/api/eliminarArchivos'; // Reemplaza con la URL real de tu backend
-
+        'https://localhost:7191/api/eliminarArchivos'; 
     try {
       final response = await http.put(
         Uri.parse(url),
         body: json.encode(archivo
-            .toJson()), // Asegúrate de que FileModel tenga un método toJson para convertirlo en un mapa
+            .toJson()), 
         headers: {
           'Content-Type': 'application/json',
         },
@@ -186,12 +185,13 @@ class AuthService {
 
   Future<String> obtenerArchivosUsuario(int idUser) async {
     final String url =
-        'https://localhost:7191/api/obtenerArchivos?idUser=$idUser'; // Reemplaza con la URL real de tu backend
+        'https://localhost:7191/api/obtenerArchivos?idUser=$idUser'; 
 
     try {
       final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
+        
         return response.body;
       } else if (response.statusCode == 400) {
         return "Error: ${response.body}";

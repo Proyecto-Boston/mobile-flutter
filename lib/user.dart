@@ -9,14 +9,14 @@ class User {
     String? surname;
     String email;
     String password;
-    int id;
+    int? id;
 
     User({
         this.name,
         this.surname,
         required this.email,
         required this.password,
-        required this.id,
+        this.id,
     });
 
     factory User.fromJson(Map<String, dynamic> json) => User(
@@ -32,6 +32,6 @@ class User {
         "surname": surname,
         "email": email,
         "password": password,
-        "id": id,
+        
     };
 }
