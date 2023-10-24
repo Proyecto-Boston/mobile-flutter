@@ -11,11 +11,11 @@ import 'package:file_picker/file_picker.dart';
 
 class AuthService {
   Future<Map<String, dynamic>> LoginUsuario(
-      String username, String password) async {
+      String email, String password) async {
     final String url = 'http://localhost:8000/auth/login';
     
 
-    final requestBody = {'username': username, 'password': password};
+    final requestBody = {'email': email, 'password': password};
 
     final response = await http.post(
       Uri.parse(url),
@@ -33,7 +33,7 @@ class AuthService {
   }
 
   Future<int> RegistroUsuario(User user) async {
-    final String apiUrl = 'https://10.0.2.2:8000/api/registro';
+    final String apiUrl = 'http://localhost:8000/auth/register';
 
     try {
       final response = await http.post(
@@ -56,7 +56,7 @@ class AuthService {
   }
 
   Future<String> verificarSesion(String token) async {
-    final String url = 'http://10.153.50.34:8000/api/verificarSesion';
+    final String url = 'http://localhost:8000/auth/verifySession';
 
     final response = await http.post(
       Uri.parse(url),
@@ -76,7 +76,7 @@ class AuthService {
   }
 
   Future<String> crearCarpeta(Folder carpeta) async {
-    final String url = 'http://10.153.50.34:8000/api/crearCarpeta';
+    final String url = 'http://localhost:8000/folder/createFolder';
 
     final response = await http.post(
       Uri.parse(url),
@@ -96,7 +96,7 @@ class AuthService {
   }
 
   Future<String> subirArchivo(File archivo) async {
-    final String url = 'http://10.153.50.34:8000/api/subirArchivo';
+    final String url = 'http://localhost:8000/file/uploadFile';
 
     try {
       var request = http.MultipartRequest('POST', Uri.parse(url))
@@ -121,7 +121,7 @@ class AuthService {
   }
 
   Future<String> moverArchivo(String ruta, int idArchivo) async {
-    final String url = 'https://localhost:7191/api/moverArchivo';
+    final String url = 'https://localhost:8000/file/moveFile';
 
     final Map<String, dynamic> requestBody = {
       "ruta": ruta,
@@ -151,7 +151,7 @@ class AuthService {
   }
 
   Future<String> eliminarArchivo(File archivo) async {
-    final String url = 'https://localhost:7191/api/eliminarArchivos';
+    final String url = 'https://localhost:8000/file/deleteFile';
     try {
       final response = await http.put(
         Uri.parse(url),
@@ -165,26 +165,6 @@ class AuthService {
         return "El archivo se ha eliminado correctamente";
       } else if (response.statusCode == 400) {
         return json.decode(response.body)["details"];
-      } else {
-        return "Respuesta inesperada";
-      }
-    } catch (e) {
-      print(e.toString());
-      return "Error de conexión";
-    }
-  }
-
-  Future<String> obtenerArchivosUsuario(int idUser) async {
-    final String url =
-        'https://localhost:7191/api/obtenerArchivos?idUser=$idUser';
-
-    try {
-      final response = await http.get(Uri.parse(url));
-
-      if (response.statusCode == 200) {
-        return response.body;
-      } else if (response.statusCode == 400) {
-        return "Error: ${response.body}";
       } else {
         return "Respuesta inesperada";
       }
