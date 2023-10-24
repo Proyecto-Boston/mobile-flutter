@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:app_celtic_drive/File.dart';
 import 'package:app_celtic_drive/Folder.dart';
@@ -9,33 +10,25 @@ import 'package:app_celtic_drive/response.dart';
 import 'package:file_picker/file_picker.dart';
 
 class AuthService {
-  Future<String> LoginUsuario(User user) async {
-    final String apiUrl = 'http://10.153.50.58:8000/api/login';
+  Future<Map<String, dynamic>> LoginUsuario(
+      String username, String password) async {
+    final String url = 'http://localhost:8000/auth/login';
+    
 
-    try {
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        body: json.encode({
-          "email": user.email,
-          "password": user.password,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      );
+    final requestBody = {'username': username, 'password': password};
 
-      if (response.statusCode == 201) {
-        final token = json.decode(response.body)["token_jwt"];
-        return "Ingreso exitoso. Token: $token";
-      } else if (response.statusCode == 400) {
-        final mensajeError = json.decode(response.body)["message"];
-        return "Error de inicio de sesión: $mensajeError";
-      } else {
-        return "Respuesta inesperada del servidor";
-      }
-    } catch (e) {
-      print(e.toString());
-      return "Error de conexión";
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(requestBody),
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else if (response.statusCode == 401) {
+      throw Exception('Usuario no registrado');
+    } else {
+      throw Exception('Hubo un problema al iniciar sesión');
     }
   }
 
@@ -105,7 +98,7 @@ class AuthService {
   Future<String> subirArchivo(File archivo) async {
     final String url = 'http://10.153.50.34:8000/api/subirArchivo';
 
-      try {
+    try {
       var request = http.MultipartRequest('POST', Uri.parse(url))
         ..files.add(await http.MultipartFile.fromPath(
           'archivo',
@@ -158,13 +151,11 @@ class AuthService {
   }
 
   Future<String> eliminarArchivo(File archivo) async {
-    final String url =
-        'https://localhost:7191/api/eliminarArchivos'; 
+    final String url = 'https://localhost:7191/api/eliminarArchivos';
     try {
       final response = await http.put(
         Uri.parse(url),
-        body: json.encode(archivo
-            .toJson()), 
+        body: json.encode(archivo.toJson()),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -185,13 +176,12 @@ class AuthService {
 
   Future<String> obtenerArchivosUsuario(int idUser) async {
     final String url =
-        'https://localhost:7191/api/obtenerArchivos?idUser=$idUser'; 
+        'https://localhost:7191/api/obtenerArchivos?idUser=$idUser';
 
     try {
       final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
-        
         return response.body;
       } else if (response.statusCode == 400) {
         return "Error: ${response.body}";

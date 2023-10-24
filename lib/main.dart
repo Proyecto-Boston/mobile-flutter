@@ -1,8 +1,6 @@
-import 'package:app_celtic_drive/inicio.dart';
 import 'package:app_celtic_drive/inicio_sesion.dart';
 import 'package:app_celtic_drive/registro.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'dart:io';
 
 

@@ -86,14 +86,13 @@ class _inicio_sesionState extends State<inicio_sesion> {
                     final password = passwordController.text;
                     final user = User(id: 0,email: email,password: password);
     
-                    final response = (await auth_service.LoginUsuario(user));
-                    if (response == 202) {
+                    final response = (await auth_service.LoginUsuario(email,password));
+                    if (response == 200) {
                       setState(() {
                         message = 'Ingreso exitoso';
-                        Navigator.of(context).pop();
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Inicio(title: "Inicio", user: user)));
-                        
                       });
+                      Navigator.of(context).pop();
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Inicio(title: "Inicio", user: user)));
                     } else if (response == 400) {
                       setState(() {
                         message = 'Error: ${response}';
