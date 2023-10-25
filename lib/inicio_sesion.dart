@@ -1,10 +1,13 @@
 
 
+import 'dart:convert';
+
 import 'package:app_celtic_drive/auth_service.dart';
 import 'package:app_celtic_drive/inicio.dart';
 
 import 'package:app_celtic_drive/user.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class inicio_sesion extends StatefulWidget{
   static const nombreRuta ='login';
@@ -81,19 +84,29 @@ class _inicio_sesionState extends State<inicio_sesion> {
                 padding: const EdgeInsets.only(top: 8, bottom: 24),
                 child: ElevatedButton.icon(
                   onPressed: () async{
-                   
                     final email = emailController.text;
                     final password = passwordController.text;
-                    final user = User(id: 0,email: email,password: password);
-    
-                    final response = (await auth_service.LoginUsuario(email,password));
-                    if (response == 200) {
+                    final user= User(email: email, password: password);
+
+                    final String url = 'http://10.0.2.2:1234/auth/login';
+                    final requestBody = {'email': email, 'password': password};
+
+                    final response = await http.post(
+                      Uri.parse(url),
+                      headers: {'Content-Type': 'application/json'},
+                      body: jsonEncode(requestBody),
+                    );
+                    
+
+                    if (response.statusCode == 200) {
                       setState(() {
                         message = 'Ingreso exitoso';
                       });
+                      final token= json.decode(response.body);
                       Navigator.of(context).pop();
                       Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Inicio(title: "Inicio", user: user)));
-                    } else if (response == 400) {
+                      
+                    } else if (response.statusCode == 401) {
                       setState(() {
                         message = 'Error: ${response}';
                       });
@@ -102,6 +115,7 @@ class _inicio_sesionState extends State<inicio_sesion> {
                         message = 'Error desconocido';
                       });
                     }
+    
                     
                   },
                   style: ElevatedButton.styleFrom(

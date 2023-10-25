@@ -42,7 +42,7 @@ class AuthService {
         headers: {'Content-Type': 'application/json'},
       );
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         return 201;
       } else if (response.statusCode == 400) {
         return json.decode(response.body)['details'];

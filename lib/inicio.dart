@@ -22,16 +22,17 @@ class iniciar extends StatelessWidget {
     return  const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: appTitle,
-      home: Inicio(title: appTitle),
+      home: Inicio(title: appTitle, id: 0,),
     );
   }
 }
 
 class Inicio extends StatefulWidget{
-  const Inicio({super.key, required this.title, this.user});
+  const Inicio({super.key, required this.title, this.user, this.id});
 
   final String title;
   final User? user;
+  final int? id;
   @override
   State<Inicio> createState()=> _inicioState();
 }

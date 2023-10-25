@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:app_celtic_drive/auth_service.dart';
 import 'package:app_celtic_drive/inicio.dart';
 import 'package:app_celtic_drive/inicio_sesion.dart';
 import 'package:app_celtic_drive/response.dart';
 import 'package:app_celtic_drive/user.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class registro extends StatefulWidget {
   static const nombreRuta = 'registro';
@@ -146,6 +149,7 @@ class _registroState extends State<registro> {
                         padding: const EdgeInsets.only(top: 8, bottom: 24),
                         child: ElevatedButton.icon(
                           onPressed: () async {
+                            final String url = 'http://10.0.2.2:1234/auth/register';
                             final name = nameController.text;
                             final surname = surnameController.text;
                             final email = emailController.text;
@@ -157,25 +161,22 @@ class _registroState extends State<registro> {
                                 password: password);
 
                             try{
-                              final response =
-                                (await auth_service.RegistroUsuario(user));
-                              if (response == 201) {
+                              final response = await http.post(
+                                Uri.parse(url),
+                                body: json.encode(user.toJson()),
+                                headers: {'Content-Type': 'application/json'},
+                                );
+                              if (response.statusCode == 200) {
                                 setState(() {
-                                  message = 'Registro exitoso';
-                                  Navigator.of(context).pop();
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Inicio(title: 'Inicio', user: user)),
-                                  );
+                                  message = 'Usuario registrado exitosamente: $response';
                                 });
-                              } else if (response == 400) {
-                                setState(() {
-                                  message = 'Error: ${response}';
-                                });
+                                final id= json.decode(response.body);
+                                Navigator.of(context).pop();
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Inicio(title: "Inicio", user: user,)));
+                                
                               } else {
                                 setState(() {
-                                  message = 'Error desconocido';
+                                  message = 'Usuario ya registrado';
                                 });
                               }
                             }catch(e){
