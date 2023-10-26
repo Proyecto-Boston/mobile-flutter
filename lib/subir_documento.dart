@@ -49,6 +49,8 @@ class _subir_documentoState extends State<subir_documento> {
   PlatformFile? archivo;
   List<String>? fileData;
   late File file;
+  File? selectedFile;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,12 +84,16 @@ class _subir_documentoState extends State<subir_documento> {
             
             if (archivo!=null) ElevatedButton(onPressed: (){verSeleccion(archivo!);}, child: Text("Ver archivo")),
             ElevatedButton(
+              child: Text('Subir Archivo'),
               
               onPressed: (){
-                var file = File(id: 0, name: archivo!.name, fileData: fileData! , size: archivo!.size, userId: widget.id!, folderId: 0, nodeId: 0);
-                uploadFile(file);},
-              child: Text('Subir Archivo'),
-            ),
+                if (selectedFile != null) {
+                  uploadFile(selectedFile!);
+                } else {
+                  print("No se selecciono ningun archivo");
+                }
+              
+            }),
           ],
         )
       ),
@@ -145,20 +151,21 @@ class _subir_documentoState extends State<subir_documento> {
     
     if (resultado != null) {
       archivo = resultado!.files.first;
+      print('Nombre del archivo seleccionado: ${archivo!.name}');
       List<String> fileData = await archivo?.bytes as List<String>;
-      file = File(
+      selectedFile = File(
         id: widget.id!,
         name: archivo!.name,
         fileData: fileData,
         size: archivo!.size,
         userId: widget.id!,
         folderId: 0,
-        nodeId: 0,
+        nodeId: 0, path: '',
       );
 
       setState(() {
-        file;
-        fileData=fileData;
+        selectedFile;
+        fileData = fileData;
       });
     }
     verSeleccion(archivo!);

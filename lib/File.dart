@@ -7,7 +7,7 @@ String FileToJson(File data) => json.encode(data.toJson());
 class File {
     int id;
     String name;
-    String? path;
+    String path;
     List<String> fileData;
     int size;
     int userId;
@@ -17,7 +17,7 @@ class File {
     File({
         required this.id,
         required this.name,
-        this.path,
+        required this.path,
         required this.fileData,
         required this.size,
         required this.userId,
