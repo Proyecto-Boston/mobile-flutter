@@ -1,5 +1,6 @@
 import 'package:app_celtic_drive/inicio_sesion.dart';
 import 'package:app_celtic_drive/registro.dart';
+import 'package:app_celtic_drive/subir_documento.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: registro(),
+      home: subir_documento(title: "Subir Documento",),
       routes: {
         registro.nombreRuta: (BuildContext context)=> registro(),
         inicio_sesion.nombreRuta:(BuildContext context) => inicio_sesion(),

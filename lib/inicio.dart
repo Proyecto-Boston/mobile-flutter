@@ -50,7 +50,7 @@ class _inicioState extends State<Inicio>{
     }
   }
   Future<void> obtenerDocumentos() async {
-    final String url = 'http://10.153.50.34:8000/api/obtenerArchivos?idUser=${widget.user?.id}';
+    final String url = 'http://10.0.2.2:1234/file/getFiles';
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -200,7 +200,7 @@ class _inicioState extends State<Inicio>{
                           ),
                           onTap: (){
                             Navigator.of(context).pop();
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context)=> const subir_documento(title: "Subir Documento",)));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context)=> const subir_documento(title: "Subir Documento")));
                           },
                         ),
                         Padding(

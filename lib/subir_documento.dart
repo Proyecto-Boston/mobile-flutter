@@ -9,9 +9,10 @@ import 'package:open_file/open_file.dart';
 import 'package:http/http.dart' as http;
 
 class subir_documento extends StatefulWidget{
-  const subir_documento({super.key, required this.title});
+  const subir_documento({super.key, required this.title, this.id});
 
   final String title;
+  final int? id;
   @override
   State<subir_documento> createState()=> _subir_documentoState();
 }
@@ -23,18 +24,31 @@ class _subir_documentoState extends State<subir_documento> {
 
   Future<void> uploadFile(File file) async {
     try {
-        await fileUploader.uploadFile(file, id: file.id, name: file.name, path: filePath, fileData: file.fileData, size: file.size, userId: file.userId, folderId: file.folderId,nodeId: file.nodeId);
-        print('Archivo subido con éxito.');
-      } catch (e) {
-        print('Error al subir el archivo: $e');
-      }
+      await fileUploader.uploadFile(
+        file,
+        id: file.id,
+        name: file.name,
+        path: filePath,
+        fileData: file.fileData,
+        size: file.size,
+        userId: file.userId,
+        folderId: file.folderId,
+        nodeId: file.nodeId,
+      );
+      print('Archivo subido con éxito.');
+    } catch (e) {
+      print('Error al subir el archivo: $e');
+    }
   }
+  
   
   late AuthService authService;
   String tipo = 'Todo';
   var fileTypeList = ['Todo', 'Imagen', 'Video', 'Audio'];
   FilePickerResult? resultado;
   PlatformFile? archivo;
+  List<String>? fileData;
+  late File file;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,11 +79,13 @@ class _subir_documentoState extends State<subir_documento> {
             ),
             ElevatedButton(onPressed:() {seleccionar(tipo);} , child: Text("Seleccionar Documento")),
             if (archivo!=null) detallesArchivo(archivo!),
-            if (archivo!=null) ElevatedButton(onPressed: (){verSeleccion(archivo! as PlatformFile);}, child: Text("Ver archivo")),
+            
+            if (archivo!=null) ElevatedButton(onPressed: (){verSeleccion(archivo!);}, child: Text("Ver archivo")),
             ElevatedButton(
               
               onPressed: (){
-                uploadFile(archivo as File);},
+                var file = File(id: 0, name: archivo!.name, fileData: fileData! , size: archivo!.size, userId: widget.id!, folderId: 0, nodeId: 0);
+                uploadFile(file);},
               child: Text('Subir Archivo'),
             ),
           ],
@@ -79,6 +95,7 @@ class _subir_documentoState extends State<subir_documento> {
       backgroundColor: Colors.white,
     );
   }
+  
 
   Widget detallesArchivo(PlatformFile archivo){
     final kb = archivo.size / 1024;
@@ -124,6 +141,25 @@ class _subir_documentoState extends State<subir_documento> {
         archivo = resultado!.files.first;
         setState(() {});
         break;
+    }
+    
+    if (resultado != null) {
+      archivo = resultado!.files.first;
+      List<String> fileData = await archivo?.bytes as List<String>;
+      file = File(
+        id: widget.id!,
+        name: archivo!.name,
+        fileData: fileData,
+        size: archivo!.size,
+        userId: widget.id!,
+        folderId: 0,
+        nodeId: 0,
+      );
+
+      setState(() {
+        file;
+        fileData=fileData;
+      });
     }
     verSeleccion(archivo!);
   }

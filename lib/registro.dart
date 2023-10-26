@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 class registro extends StatefulWidget {
   static const nombreRuta = 'registro';
 
+
   @override
   State<registro> createState() => _registroState();
 }
