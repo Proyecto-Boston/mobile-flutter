@@ -1,26 +1,24 @@
-import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
 
-File filesFromJson(String str) => File.fromJson(json.decode(str));
+File FileFromJson(String str) => File.fromJson(json.decode(str));
 
-String filesToJson(File data) => json.encode(data.toJson());
+String FileToJson(File data) => json.encode(data.toJson());
 
 class File {
-    int? id;
+    int id;
     String name;
-    String path;
-    int? file1;
+    String? path;
+    List<String> fileData;
     int size;
     int userId;
     int folderId;
     int nodeId;
 
     File({
-        this.id,
+        required this.id,
         required this.name,
-        required this.path,
-        this.file1,
+        this.path,
+        required this.fileData,
         required this.size,
         required this.userId,
         required this.folderId,
@@ -31,7 +29,7 @@ class File {
         id: json["id"],
         name: json["name"],
         path: json["path"],
-        file1: json["file1"],
+        fileData: List<String>.from(json["fileData"].map((x) => x)),
         size: json["size"],
         userId: json["userId"],
         folderId: json["folderId"],
@@ -42,12 +40,10 @@ class File {
         "id": id,
         "name": name,
         "path": path,
-        "file1": file1,
+        "fileData": List<dynamic>.from(fileData.map((x) => x)),
         "size": size,
         "userId": userId,
         "folderId": folderId,
         "nodeId": nodeId,
     };
-
-    
 }

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:app_celtic_drive/File.dart';
@@ -5,6 +6,7 @@ import 'package:app_celtic_drive/auth_service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
+import 'package:http/http.dart' as http;
 
 class subir_documento extends StatefulWidget{
   const subir_documento({super.key, required this.title});
@@ -15,11 +17,24 @@ class subir_documento extends StatefulWidget{
 }
 
 class _subir_documentoState extends State<subir_documento> {
+
+  FileUploader fileUploader = FileUploader('http://10.0.2.2:1234');
+  late String filePath;
+
+  Future<void> uploadFile(File file) async {
+    try {
+        await fileUploader.uploadFile(file, id: file.id, name: file.name, path: filePath, fileData: file.fileData, size: file.size, userId: file.userId, folderId: file.folderId,nodeId: file.nodeId);
+        print('Archivo subido con éxito.');
+      } catch (e) {
+        print('Error al subir el archivo: $e');
+      }
+  }
+  
   late AuthService authService;
   String tipo = 'Todo';
   var fileTypeList = ['Todo', 'Imagen', 'Video', 'Audio'];
   FilePickerResult? resultado;
-  late File archivo;
+  PlatformFile? archivo;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,12 +63,19 @@ class _subir_documentoState extends State<subir_documento> {
                 },
             )],
             ),
-            ElevatedButton(onPressed:() {authService.subirArchivo(archivo as File);} , child: Text("Seleccionar Documento")),
-            if (archivo!=null) detallesArchivo(archivo! as PlatformFile),
-            if (archivo!=null) ElevatedButton(onPressed: (){verSeleccion(archivo! as PlatformFile);}, child: Text("Ver archivo"))
+            ElevatedButton(onPressed:() {seleccionar(tipo);} , child: Text("Seleccionar Documento")),
+            if (archivo!=null) detallesArchivo(archivo!),
+            if (archivo!=null) ElevatedButton(onPressed: (){verSeleccion(archivo! as PlatformFile);}, child: Text("Ver archivo")),
+            ElevatedButton(
+              
+              onPressed: (){
+                uploadFile(archivo as File);},
+              child: Text('Subir Archivo'),
+            ),
           ],
         )
       ),
+      
       backgroundColor: Colors.white,
     );
   }
@@ -76,7 +98,82 @@ class _subir_documentoState extends State<subir_documento> {
     );
   }
 
+  void seleccionar(String? tipo)async{
+    switch (tipo) {
+      case 'Image':
+        resultado = await FilePicker.platform.pickFiles(type: FileType.image);
+        if (resultado == null) return;
+        archivo = resultado!.files.first;
+        setState(() {});
+        break;
+      case 'Video':
+        resultado = await FilePicker.platform.pickFiles(type: FileType.video);
+        if (resultado == null) return;
+        archivo = resultado!.files.first;
+        setState(() {});
+        break;
+      case 'Audio':
+        resultado = await FilePicker.platform.pickFiles(type: FileType.audio);
+        if (resultado == null) return;
+        archivo = resultado!.files.first;
+        setState(() {});
+        break;
+      case 'All':
+        resultado = await FilePicker.platform.pickFiles();
+        if (resultado == null) return;
+        archivo = resultado!.files.first;
+        setState(() {});
+        break;
+    }
+    verSeleccion(archivo!);
+  }
+
   void verSeleccion(PlatformFile archivo){
     OpenFile.open(archivo.path);
+  }
+}
+
+class FileUploader {
+  final String baseUrl; // URL del servidor API
+  FileUploader(this.baseUrl);
+
+  Future<void> uploadFile(File file, {
+    required int id,
+    required String name,
+    String? path,
+    required List<String> fileData,
+    required int size,
+    required int userId,
+    required int folderId,
+    required int nodeId,
+  }) async {
+    final apiUrl = Uri.parse('$baseUrl/file/uploadFile'); 
+    final Map<String, dynamic> data = {
+      'id': id,
+      'name': name,
+      'path': path,
+      'fileData': fileData,
+      'size': size,
+      'userId': userId,
+      'folderId': folderId,
+      'nodeId': nodeId,
+    };
+
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+
+    final response = await http.post(
+      apiUrl,
+      headers: headers,
+      body: jsonEncode(data),
+    );
+
+    if (response.statusCode == 200) {
+      print('Archivo subido exitosamente.');
+    } else {
+      print('Error al subir el archivo: ${response.statusCode}');
+      throw Exception('No se pudo subir el archivo.');
+    }
   }
 }

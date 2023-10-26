@@ -95,30 +95,7 @@ class AuthService {
     }
   }
 
-  Future<String> subirArchivo(File archivo) async {
-    final String url = 'http://localhost:8000/file/uploadFile';
-
-    try {
-      var request = http.MultipartRequest('POST', Uri.parse(url))
-        ..files.add(await http.MultipartFile.fromPath(
-          'archivo',
-          archivo.path,
-        ));
-
-      var response = await request.send();
-      if (response.statusCode == 201) {
-        return "Archivo subido exitosamente";
-      } else if (response.statusCode == 400) {
-        final responseBody = await response.stream.bytesToString();
-        return responseBody;
-      } else {
-        return "Respuesta inesperada";
-      }
-    } catch (e) {
-      print(e.toString());
-      return "Error de conexión";
-    }
-  }
+  
 
   Future<String> moverArchivo(String ruta, int idArchivo) async {
     final String url = 'https://localhost:8000/file/moveFile';
