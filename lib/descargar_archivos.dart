@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:app_celtic_drive/File.dart';
+import 'package:app_celtic_drive/models_request/File.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 

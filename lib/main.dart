@@ -1,10 +1,9 @@
-import 'package:app_celtic_drive/descargar_archivos.dart';
+
 import 'package:app_celtic_drive/inicio_sesion.dart';
-import 'package:app_celtic_drive/registro.dart';
-import 'package:app_celtic_drive/subir.dart';
-import 'package:app_celtic_drive/subir_documento.dart';
+import 'package:app_celtic_drive/screens/register.dart';
+import 'package:app_celtic_drive/screens/registro.dart';
 import 'package:flutter/material.dart';
-import 'dart:io';
+
 
 
 void main() {
@@ -24,9 +23,9 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: FileListScreen(),//subir_documento(title: "Subir Documento",),
+      home: registro(),//subir_documento(title: "Subir Documento",),
       routes: {
-        registro.nombreRuta: (BuildContext context)=> registro(),
+        RegisterUserWidget.nombreRuta: (BuildContext context)=> RegisterUserWidget(),
         inicio_sesion.nombreRuta:(BuildContext context) => inicio_sesion(),
       }
     );

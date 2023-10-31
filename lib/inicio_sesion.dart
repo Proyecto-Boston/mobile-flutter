@@ -4,7 +4,6 @@ import 'dart:convert';
 
 import 'package:app_celtic_drive/auth_service.dart';
 import 'package:app_celtic_drive/inicio.dart';
-
 import 'package:app_celtic_drive/user.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -86,7 +85,7 @@ class _inicio_sesionState extends State<inicio_sesion> {
                   onPressed: () async{
                     final email = emailController.text;
                     final password = passwordController.text;
-                    final user= User(email: email, password: password);
+                    final user= User(id:0, email: email, password: password);
 
                     final String url = 'http://10.0.2.2:1234/auth/login';
                     final requestBody = {'email': email, 'password': password};
@@ -104,7 +103,7 @@ class _inicio_sesionState extends State<inicio_sesion> {
                       });
                       final token= json.decode(response.body);
                       Navigator.of(context).pop();
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Inicio(title: "Inicio", user: user)));
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Inicio(title: "Inicio", user: user, id: user.id,)));
                       
                     } else if (response.statusCode == 401) {
                       setState(() {

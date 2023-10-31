@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'package:app_celtic_drive/auth_service.dart';
 import 'package:app_celtic_drive/inicio.dart';
 import 'package:app_celtic_drive/inicio_sesion.dart';
-import 'package:app_celtic_drive/response.dart';
+import 'package:app_celtic_drive/models_request/response.dart';
+
 import 'package:app_celtic_drive/user.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -156,6 +157,7 @@ class _registroState extends State<registro> {
                             final email = emailController.text;
                             final password = passwordController.text;
                             final user = User(
+                              id: 0,
                                 name: name,
                                 surname: surname,
                                 email: email,
@@ -167,13 +169,15 @@ class _registroState extends State<registro> {
                                 body: json.encode(user.toJson()),
                                 headers: {'Content-Type': 'application/json'},
                                 );
+                                final Map<String, dynamic> data = json.decode(response.body);
+                                final r = Response.fromJson(data, statusCode: 200, details: 'El usuario se registró correctamente', );
                               if (response.statusCode == 200) {
                                 setState(() {
                                   message = 'Usuario registrado exitosamente: $response';
                                 });
                                 final id= json.decode(response.body);
                                 Navigator.of(context).pop();
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Inicio(title: "Inicio", user: user,)));
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Inicio(title: "Inicio", user: user,id: data["json"])));
                                 
                               } else {
                                 setState(() {

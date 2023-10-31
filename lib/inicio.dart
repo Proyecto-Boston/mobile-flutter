@@ -28,11 +28,11 @@ class iniciar extends StatelessWidget {
 }
 
 class Inicio extends StatefulWidget{
-  const Inicio({super.key, required this.title, this.user, this.id});
+  const Inicio({super.key, required this.title, this.user, required this.id});
 
   final String title;
   final User? user;
-  final int? id;
+  final int id;
   @override
   State<Inicio> createState()=> _inicioState();
 }
@@ -222,31 +222,7 @@ class _inicioState extends State<Inicio>{
                             ],
                           ),
                         ),
-                        GestureDetector(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left:30, top:16, bottom:16),
-                            child: Row(
-                              children: const [
-                                Icon(
-                                  color: Color.fromARGB(255, 255, 255, 255),
-                                  Icons.edit_document,
-                                  size: 30,
-                                ),
-                                SizedBox(
-                                  width: 20,
-                                ),
-                                Text(
-                                  "Editar Documento",
-                                  style: TextStyle(fontWeight: FontWeight.w300,fontSize: 20,color:Colors.white),
-                                ),
-                              ],
-                            ),
-                          ),
-                          onTap: (){
-                            Navigator.of(context).pop();
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Inicio(title: "Inicio",)));
-                          },
-                        ),
+                        
                         GestureDetector(
                           child: Padding(
                             padding: const EdgeInsets.only(left:30, top:16, bottom:16),
@@ -269,7 +245,7 @@ class _inicioState extends State<Inicio>{
                           ),
                           onTap: (){
                             Navigator.of(context).pop();
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Inicio(title: "Inicio",)));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Inicio(title: "Inicio", id: 0,)));
                           },
                         ),
                         GestureDetector(
@@ -294,7 +270,7 @@ class _inicioState extends State<Inicio>{
                           ),
                           onTap: (){
                             Navigator.of(context).pop();
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Inicio(title: "Inicio",)));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Inicio(title: "Inicio", id: 0,)));
                           },
                         ),
                         GestureDetector(

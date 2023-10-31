@@ -2,7 +2,7 @@
 import 'dart:typed_data';
 import 'dart:async';
 
-import 'package:app_celtic_drive/File.dart';
+import 'package:app_celtic_drive/models_request/File.dart';
 
 class CustomFile {
   final File originalFile; // La clase File existente

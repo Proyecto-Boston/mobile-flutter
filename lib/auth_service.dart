@@ -1,13 +1,11 @@
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:app_celtic_drive/File.dart';
+import 'package:app_celtic_drive/models_request/File.dart';
 import 'package:app_celtic_drive/Folder.dart';
-import 'package:app_celtic_drive/custom_file.dart';
+
 import 'package:app_celtic_drive/user.dart';
 import 'package:http/http.dart' as http;
-import 'package:app_celtic_drive/response.dart';
-import 'package:file_picker/file_picker.dart';
+
 
 class AuthService {
   Future<Map<String, dynamic>> LoginUsuario(

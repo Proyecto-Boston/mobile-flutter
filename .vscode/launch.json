@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Flutter",
+        "request": "launch",
+        "type": "dart",
+        "program": "lib/main.dart",
+        "args": ["--web-port", "7123"], // Especifica el puerto aquí
+        "cwd": "${workspaceFolder}",
+        "preLaunchTask": "flutter:build web",
+        "flutterMode": "debug",
+        "deviceName": "web",
+        "hostname": "0.0.0.0" // Especifica el host aquí
+      }
+    ]
+  }
+  

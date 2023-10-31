@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:app_celtic_drive/File.dart';
+import 'package:app_celtic_drive/models_request/File.dart';
 import 'package:app_celtic_drive/auth_service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
